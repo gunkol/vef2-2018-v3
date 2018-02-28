@@ -14,12 +14,12 @@ function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
 
-router.get('/', async (req, res) => {
+router.get('/', catchErrors(async (req, res) => {
   const data = await readAll();
   res.json(data);
-});
+}));
 
-router.post('/', async (req, res) => {
+router.post('/', catchErrors(async (req, res) => {
   const {
     title = '',
     text = '',
@@ -56,19 +56,20 @@ router.post('/', async (req, res) => {
 
   const data = await create({ title, text, datetime });
   return res.json(data[0]);
-});
+}));
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', catchErrors(async (req, res) => {
   const { id } = req.params;
   const data = await readOne(id);
+
   if (data.length > 0) {
-    res.json(data[0]);
+    return res.json(data[0]);
   }
   const errorMessage = { error: 'Note not found' };
-  res.status(404).json(errorMessage);
-});
+  return res.status(404).json(errorMessage);
+}));
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', catchErrors(async (req, res) => {
   const { id } = req.params;
 
   const {
@@ -112,9 +113,9 @@ router.put('/:id', async (req, res) => {
 
   const errorMessage = { error: 'Note not found' };
   return res.status(404).json(errorMessage);
-});
+}));
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', catchErrors(async (req, res) => {
   const { id } = req.params;
 
   const result = await del(id);
@@ -124,6 +125,6 @@ router.delete('/:id', async (req, res) => {
 
   const errorMessage = { error: 'Note not found' };
   return res.status(404).json(errorMessage);
-});
+}));
 
 module.exports = router;
