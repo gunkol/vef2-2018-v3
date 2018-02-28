@@ -1,6 +1,5 @@
 const { Client } = require('pg');
 const xss = require('xss');
-const { check, validationResult } = require('express-validator/check');
 
 const connectionString = process.env.DATABASE_URL;
 

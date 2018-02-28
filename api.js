@@ -107,24 +107,23 @@ router.put('/:id', async (req, res) => {
 
   const updated = await update(id, { title, text, datetime });
   if (updated.length > 0) {
-    res.json(updated[0]);
+    return res.json(updated[0]);
   }
 
   const errorMessage = { error: 'Note not found' };
-  res.status(404).json(errorMessage);
+  return res.status(404).json(errorMessage);
 });
 
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
   const result = await del(id);
-  console.log(result);
   if (result) {
     return res.status(204).json();
   }
 
   const errorMessage = { error: 'Note not found' };
-  res.status(404).json(errorMessage);
+  return res.status(404).json(errorMessage);
 });
 
 module.exports = router;
